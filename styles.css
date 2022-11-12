@@ -1,0 +1,109 @@
+body {
+    overflow: hidden;
+    font-family: Arial;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#project-start-container, #prompt-input-container{
+    position: absolute;
+    border: 2px solid black;
+
+    left: 50%;
+    top: 10%;
+    transform: translate(-50%, 0);
+
+    width: 40%;
+
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+#slideshow-container{
+    position: absolute;
+    border: 2px solid black;
+    text-align: center;
+    top: 10%;
+    width: 100%;
+    height: 70%;
+    padding: 0;
+    margin: 0;
+    background-color: aqua;
+}
+
+
+#slideshow-content{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+#timeline-container {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    vertical-align: top;
+}
+#timeline-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+
+
+
+
+
+.key-frame {
+    z-index: 5000;
+}
+
+.image-border {
+    fill: transparent;
+    stroke: black;
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+}
+
+input[type=text], input[type=number],textarea, select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+}
+  
+button[type=button] {
+    width: 100%;
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+  
+button[type=button]:hover {
+    background-color: #45a049;
+}
+  
