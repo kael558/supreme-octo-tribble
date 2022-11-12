@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="../static/styles.css">
+        <script src="../static/index.js"></script>
+        
+            <!--
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+            -->
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/ce44f4be69.js" crossorigin="anonymous"></script>
+    </head>
+
+
+    <body>
+        <div id="project-start-container">
+            <form id="new-keyframe">
+                <label for="numFrames">Number of frames:</label>
+                <input id="numFrames" type="number" name="frameNum" value="100"/>
+            
+                <label for="width">Image width:</label>
+                <input id="width" type="number" name="width" value="512"/>
+            
+                <label for="height">Image height:</label>
+                <input id="height" type="number" name="height" value="512"/>
+
+                <button onclick="submit_settings()" type="button">Submit</button>
+            </form>
+        </div>
+
+        <div id="prompt-input-container">
+            <form id="new-keyframe">
+                <label for="frame">Frame:</label>
+                <input id="frame" type="number" name="frame" value="0"/>
+
+                <label for="artists">Choose an artist:</label>
+                <select name="artists" id="artists" multiple>
+                <option value="Hayao Miyazaki" selected>Hayao Miyazaki</option>
+                <option value="Dave Gibbons">Dave Gibbons</option>
+                </select>
+            
+                <label for="illustationStyle">Choose an illustration style:</label>
+                <select name="illustationStyle" id="illustationStyle">
+                <option value="Watercolor">Watercolor</option>
+                <option value="Crayon">Crayon</option>
+                <option value="Acrylic on Canvas">Acrylic on Canvas</option>
+                </select>
+
+                <label for="prompt">Enter prompt:</label>
+                <textarea id="prompt"></textarea>
+                
+                <button onclick="submit_prompt()" type="button" >Submit</button>
+            </form>
+        </div>
+
+
+
+
+        <div id="svg-container">
+            <svg id="svg-content"></svg>
+
+        
+        </div>
+
+
+    </body>
+</html>

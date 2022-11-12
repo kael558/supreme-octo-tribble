@@ -1,10 +1,11 @@
 ## Todo
- - Finish slideshow 
- - Workflow UI (project settings -> container)
- - Prompt update, delete, advanced options for animation (rotate translate etc...)
+ - Hook up API
+ - Setup video render from python??
  - Optimized rendering (rendering frames that are changed only)
- - Hooking up the API
- - Audio addition
+ - Input amateur drawing and generate image
+ - Add audio queue
+ - Advanced options (model selection)
+
 
 ## Prompt Engineering
 ### Prompt Components

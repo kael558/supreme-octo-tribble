@@ -21,15 +21,16 @@ body {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;
+    z-index: 1;
 }
 
 #slideshow-container{
     position: absolute;
     border: 2px solid black;
     text-align: center;
-    top: 10%;
+    top: 0;
     width: 100%;
-    height: 70%;
+    height: 100%;
     padding: 0;
     margin: 0;
     background-color: aqua;
@@ -41,11 +42,13 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+    height: 100%;
+    width: 100%;
 }
 
 
 
-#timeline-container {
+#svg-container {
     display: inline-block;
     position: absolute;
     width: 100%;
@@ -55,30 +58,30 @@ body {
     bottom: 0;
     left: 0;
     vertical-align: top;
+    background-color: aqua;
 }
-#timeline-content {
+#svg-content {
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0;
+    height: 100%;
+    width: 100%;
 }
-
-
-
-
 
 
 
 
 .key-frame {
-    z-index: 5000;
+    z-index: 2;
 }
 
 .image-border {
     fill: transparent;
     stroke: black;
     shape-rendering: crispEdges;
-    stroke-width: 1px;
+    stroke-width: 3px;
+    z-index: 100;
 }
 
 input[type=text], input[type=number],textarea, select {
@@ -107,3 +110,7 @@ button[type=button]:hover {
     background-color: #45a049;
 }
   
+
+textarea {
+    resize: vertical;
+  }
