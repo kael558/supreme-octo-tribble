@@ -1,10 +1,10 @@
-'''import re
+import re
 import cv2
 import pandas as pd
 import numpy as np
 from functools import reduce
 from einops import rearrange
-import torch
+
 from skimage.exposure import match_histograms
 import random
 from pytorch_lightning import seed_everything
@@ -194,19 +194,8 @@ def anim_frame_warp_2d(prev_img_cv2, args, anim_args, keys, frame_idx):
     rot_mat = cv2.getRotationMatrix2D(center, angle, zoom)
     trans_mat = np.vstack([trans_mat, [0, 0, 1]])
     rot_mat = np.vstack([rot_mat, [0, 0, 1]])
-    if anim_args.flip_2d_perspective:
-        perspective_flip_theta = keys.perspective_flip_theta_series[frame_idx]
-        perspective_flip_phi = keys.perspective_flip_phi_series[frame_idx]
-        perspective_flip_gamma = keys.perspective_flip_gamma_series[frame_idx]
-        perspective_flip_fv = keys.perspective_flip_fv_series[frame_idx]
-        M, sl = warpMatrix(args.W, args.H, perspective_flip_theta, perspective_flip_phi, perspective_flip_gamma, 1.,
-                           perspective_flip_fv);
-        post_trans_mat = np.float32([[1, 0, (args.W - sl) / 2], [0, 1, (args.H - sl) / 2]])
-        post_trans_mat = np.vstack([post_trans_mat, [0, 0, 1]])
-        bM = np.matmul(M, post_trans_mat)
-        xform = np.matmul(bM, rot_mat, trans_mat)
-    else:
-        xform = np.matmul(rot_mat, trans_mat)
+    
+    xform = np.matmul(rot_mat, trans_mat)
 
     return cv2.warpPerspective(
         prev_img_cv2,
@@ -258,4 +247,3 @@ def next_seed(args):
 def generate(args, frame=0, return_latent=False, return_sample=False, return_c=False):
     seed_everything(args.seed)
 
-'''

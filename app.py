@@ -1,6 +1,7 @@
 import os
 #from animation import DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
-#from helpers import DepthModel, sampler_fn
+
+#import torch
 #import cv2
 import numpy as np
 import pandas as pd
@@ -53,6 +54,16 @@ def generate():
     prompt = data['prompt']
     url = "https://api.newnative.ai/stable-diffusion?prompt={}".format(prompt)
 
+
+    r = requests.post(url='https://0677cdc26e4f3cef.gradio.app/run/predict/', json={"data": ['A happy little girl in a cardboard box decorated as a spaceship, art by Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation']})
+    result = r.json()
+    json.dump(result, f)
+
+    print(result['data'])
+
+    im = Image.open(BytesIO(base64.b64decode(result['data'][0])))
+    im.save('test.png')
+
     response = requests.request("GET", url)
     data = response.json()
     image_url = data["image_url"]
@@ -63,30 +74,17 @@ def generate():
 
 @app.route('/render_animation', methods=['POST'])
 def render_animation():
-    """
-    Input args:
-     - prompts: [{
-
-
-     }]
-     - animation settings  
-
-     animation_prompts = {
-    0: "a beautiful apple, trending on Artstation",
-    20: "a beautiful banana, trending on Artstation",
-    30: "a beautiful coconut, trending on Artstation",
-    40: "a beautiful durian, trending on Artstation",
-}
-    """
     data = request.get_json()
 
+
+def render_animation(data):
     args = data.args
     anim_args = data.anim_args
 
     # expand key frame strings to values
     keys = DeformAnimKeys(anim_args)
 
-    # expand prompts out to per-frame
+    # expand prompts out to per-frame TODO correct
     animation_prompts = {}
     for prompt in args.prompts:
         animation_prompts[prompt.keyframe] = prompt.image;
@@ -156,7 +154,6 @@ def render_animation():
             noised_sample = add_noise(sample_from_cv2(contrast_sample), noise)
 
             # use transformed previous frame as init for current
-            args.use_init = True
             if half_precision:
                 args.init_sample = noised_sample.half().to(device)
             else:
@@ -193,6 +190,58 @@ def render_animation():
     
 
 if __name__ == "__main__":
+    '''
+    args:
+    prompts
+    diffusion_cadence = 7
+    timestring = (calculated later)
+    outdir = 
+    seed = 25
+    W = (INPUT)
+    H = (INPUT)
+    seed_behavior = "fixed"
+
+    anim_args:
+    max_frames = (INPUT)
+    color_coherence = 'Match Frame 0 LAB'
+    border = 'replicate'
+
+    noise_schedule = "0: (0.02)"
+    strength_schedule = "0: (0.65)"
+    contrast_schedule = "0: (1.0)"
+
+    angle = "0:(0)"
+    zoom = "0:(1.04)"
+    translation_x = "0:(10*sin(2*3.14*t/10))"
+    translation_y = "0:(0)"
+    translation_z = "0:(0)"
+    rotation_3d_x = "0:(0)"
+    rotation_3d_y = "0:(0)"
+    rotation_3d_z = "0:(0)"
+    '''
+
+    '''args_dict = DeforumArgs()
+    anim_args_dict = DeforumAnimArgs()
+
+    args = SimpleNamespace(**args_dict)
+    anim_args = SimpleNamespace(**anim_args_dict)
+
+    args.timestring = time.strftime('%Y%m%d%H%M%S')
+    args.strength = max(0.0, min(1.0, args.strength))
+    
+    if args.seed == -1:
+        args.seed = random.randint(0, 2**32 - 1)
+
+    if args.sampler != 'ddim':
+        args.ddim_eta = 0
+
+    torch.cuda.empty_cache()
+
+    data = {'args': args, 'anim_args': anim_args}
+
+    render_animation(data)'''
+
+
     app.run(debug=True)
 
 

@@ -6,6 +6,7 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
+    background-color: aqua;
 }
 
 #project-start-container, #prompt-input-container{
@@ -23,29 +24,6 @@ body {
     padding: 20px;
     z-index: 1;
 }
-
-#slideshow-container{
-    position: absolute;
-    border: 2px solid black;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: aqua;
-}
-
-
-#slideshow-content{
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-}
-
 
 
 #svg-container {

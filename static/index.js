@@ -95,34 +95,40 @@ function generate(){
     }
 }
 
+//<img src="data:image/png;base64, [base64 encoded image string here]">
 function request_url(keyframe, prompt){
-    prompt_data = {'prompt': prompt}
+    prompt_data = {'data': [prompt]}
     $.ajax({
         type: "POST",
-        url: "/generate",
+        url: "https://0677cdc26e4f3cef.gradio.app/run/predict/",
         data: JSON.stringify(prompt_data),
         contentType: "application/json",
         dataType: 'json',
         success: function(result) {
-            console.log('Resulting image url:' + result)
+            //console.log(typeof(result))
+            encoding = result['data'][0]
             if (centered_image_keyframe == -1){
                 obj = {
                     'keyframe': keyframe,
                     'prompt': prompt,
-                    'images': [result.image_url],
+                    'images': [encoding],
                     'selected_image_idx': 0
                 }
                 data.push(obj);
             } else {
                 for (let entry of data){
                     if (entry.keyframe == keyframe){
-                        entry.images.push(result.image_url);
+                        entry.images.push(encoding);
                         entry.selected_image_idx = entry.images.length-1;
                     }
                 }
             }
             render();
-        } 
+        },
+        error: function (request, status, error) {
+            console.log(status)
+            console.log(error)
+        }
       });
 }
 
