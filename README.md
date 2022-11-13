@@ -1,10 +1,12 @@
 ## Todo
- - Hook up API
- - Setup video render from python??
+ - Hook up API - Done
+ - Setup video render from python 
+ - TODO add Progress bars for generating images and frames
  - Optimized rendering (rendering frames that are changed only)
- - Input amateur drawing and generate image
  - Add audio queue
  - Advanced options (model selection)
+ - Input amateur drawing and generate image
+
 
 
 ## Prompt Engineering

@@ -1,4 +1,4 @@
-import re
+'''import re
 import cv2
 import pandas as pd
 import numpy as np
@@ -7,6 +7,7 @@ from einops import rearrange
 import torch
 from skimage.exposure import match_histograms
 import random
+from pytorch_lightning import seed_everything
 
 class DeformAnimKeys():
     def __init__(self, anim_args):
@@ -257,3 +258,4 @@ def next_seed(args):
 def generate(args, frame=0, return_latent=False, return_sample=False, return_c=False):
     seed_everything(args.seed)
 
+'''

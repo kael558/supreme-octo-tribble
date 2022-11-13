@@ -76,8 +76,58 @@ function hide_prompt_input_container(){
     );
 }
 
+
+function deletePrompt(){
+    for (let i in data){
+        if (data[i].keyframe == centered_image_keyframe){
+            data.splice(i, 1)
+            centered_image_keyframe = -1;
+            render();
+        }
+    }
+}
+
+function generate(){
+    for (let entry of data){
+        if (entry.keyframe == centered_image_keyframe){
+            request_url(entry.keyframe, entry.prompt)
+        }
+    }
+}
+
+function request_url(keyframe, prompt){
+    prompt_data = {'prompt': prompt}
+    $.ajax({
+        type: "POST",
+        url: "/generate",
+        data: JSON.stringify(prompt_data),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(result) {
+            console.log('Resulting image url:' + result)
+            if (centered_image_keyframe == -1){
+                obj = {
+                    'keyframe': keyframe,
+                    'prompt': prompt,
+                    'images': [result.image_url],
+                    'selected_image_idx': 0
+                }
+                data.push(obj);
+            } else {
+                for (let entry of data){
+                    if (entry.keyframe == keyframe){
+                        entry.images.push(result.image_url);
+                        entry.selected_image_idx = entry.images.length-1;
+                    }
+                }
+            }
+            render();
+        } 
+      });
+}
+
 function submit_prompt(){
-    const frame = document.getElementById("frame").value
+    const frame = Number(document.getElementById("frame").value)
     if (frame < 0 || frame > num_frames){
         alert('Invalid frame number. Must be between ' + 0 + ' and ' + num_frames);
     }
@@ -95,24 +145,10 @@ Storybook, highly detailed, illustration, trending on artstation
     for (let artist in artists){
         complete_prompt +", art by " + artist;
     }
-    complete_prompt+=illustationStyle;
-    complete_prompt+='Memphis, Storybook, highly detailed, illustration, trending on artstation'
+    complete_prompt+= ", " + illustationStyle;
+    complete_prompt+=', Memphis, Storybook, highly detailed, illustration, trending on artstation'
 
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-      };
-
-      const prompt_template = "A joyful little girl in a cosmonaut helmet"
-      const url = "https://api.newnative.ai/stable-diffusion?prompt=" + encodeURI(prompt_template)
-      console.log(url);
-
-      fetch(url, requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-    
-    //render();
+    request_url(frame, complete_prompt);
 }
 
 function inital_render(){
@@ -167,25 +203,6 @@ function render(){
     }
 
 
-    function dragstarted(event, d) {
-        d3.select(this).raise().attr("stroke", "black");
-    }
-    
-    function dragged(event, d) {
-        d3.select(this).attr("cx", d.x = event.x).attr("cy", d.y = event.y);
-    }
-    
-    function dragended(event, d) {
-        d3.select(this).attr("stroke", null);
-    }
-    
-    let drag_behavior = d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended);
-    
-
-
     svg.selectAll('g.key-frame')
         .data(data, (d)=>d.keyframe)
         .join(
@@ -209,6 +226,7 @@ function render(){
                 // Image group
                 let imageGroup = keyframe_elem.append('g')
                                     .classed('img_group', true)
+                                    .attr('top', 100)
                                     .attr('z-index', (d, i) => num_frames-d.keyframe);
                                     
                  imageGroup.append('image')
@@ -267,6 +285,20 @@ function render(){
                             }
                             render();
                         })
+                imageGroup.append('text')
+                        .classed('options', true)
+                        .classed('page', true)
+                        .attr('font-size', function(d) { return '3em'})
+                        .text(function(d) { return (d.selected_image_idx+1) + '/' +d.images.length })
+                        .attr('x', -30)
+                        .attr('y', (-img_height-image_y_offset-10))
+                        .attr('text-align', 'center')
+                        .attr("width", 50)
+                        .attr("height", 20)
+                        .attr('opacity', 0)
+                        .attr('pointer-events', 'none')
+                        .attr('cursor', 'none')
+        
                 imageGroup.append("foreignObject")
                             .classed('options', true)
                             .attr("x", -img_width/2)
@@ -276,11 +308,13 @@ function render(){
                             .attr('pointer-events', 'none')
                             .attr('cursor', 'none')
                             .html(function(d) {
-                                return `<textarea id="text-${d.keyframe}">${d.prompt}</textarea>`
+                                return `<textarea readonly>${d.prompt}</textarea>
+                                        <button onclick="deletePrompt()"> Delete </button>
+                                        <button onclick="generate()"> Generate </button>`
                             })
                             .attr('opacity', 0)
-                            
-                        
+
+   
                 imageGroup.attr('transform', (d) => transform_keyframe(d))
 
                 imageGroup.on("mouseover", function(event, d) {
@@ -300,8 +334,8 @@ function render(){
                         .attr("transform", `scale(${1/image_scale}, ${1/image_scale})`)
                         .attr('z-index', num_frames-d.keyframe);
                 }).on("click", function(event, d){
-                    console.log(event.srcElement.tagName)
-                    if (event.srcElement.tagName == 'text' || event.srcElement.tagName == 'TEXTAREA')
+                    //console.log(event.srcElement.tagName)
+                    if (['text' , 'TEXTAREA', 'BUTTON'].includes(event.srcElement.tagName))
                         return;
 
                     if (centered_image_keyframe == -1){ //there is no centered keyframe
@@ -337,6 +371,10 @@ function render(){
                     .attr('opacity', (d) => (d.keyframe == centered_image_keyframe) ? 1 : 0)
                     .attr('pointer-events', 'auto')
                     .attr('cursor', 'auto')
+
+            update.select('g.img_group').selectAll('.page')
+                .text(function(d) { return (d.selected_image_idx+1) + '/' + d.images.length })
+
             return update;
         },
         exit => exit.remove()

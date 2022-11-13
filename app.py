@@ -1,15 +1,18 @@
 import os
-from animation import DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
-from helpers import DepthModel, sampler_fn
-import cv2
+#from animation import DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
+#from helpers import DepthModel, sampler_fn
+#import cv2
 import numpy as np
 import pandas as pd
+
+import requests
+import urllib.request
 
 models_path = "/content/models"  # @param {type:"string"}
 output_path = "/content/output"  # @param {type:"string"}
 
-os.makedirs(models_path, exist_ok=True)
-os.makedirs(output_path, exist_ok=True)
+#os.makedirs(models_path, exist_ok=True)
+#os.makedirs(output_path, exist_ok=True)
 
 model_config = "v1-inference.yaml"
 model_checkpoint =  "sd-v1-4.ckpt"
@@ -17,16 +20,12 @@ model_checkpoint =  "sd-v1-4.ckpt"
 ckpt_config_path = "./stable-diffusion/configs/stable-diffusion/v1-inference.yaml"
 ckpt_path = os.path.join(models_path, model_checkpoint)
 
-
-
 half_precision = True
 
-import win32api
+#import win32api
 from flask import Flask, render_template, url_for, request, jsonify
 
 app = Flask(__name__)
-
-
 
 
 
@@ -34,22 +33,32 @@ app = Flask(__name__)
 #0x00001000 - This makes the popup appear over the browser window
 @app.route('/')
 def index():
-    win32api.MessageBox(0, 'You have just run a python script on the page load!', 'Running a Python Script via Javascript', 0x00001000)
+    #win32api.MessageBox(0, 'You have just run a python script on the page load!', 'Running a Python Script via Javascript', 0x00001000)
     return render_template('index.html')
-
-
-
 
 #Using the below, the popup message appears when the button is clicked on the webpage.
 #0x00001000 - This makes the popup appear over the browser window
 @app.route('/test')
 def test():
-    win32api.MessageBox(0, 'You have just run a python script on the button press!', 'Running a Python Script via Javascript', 0x00001000)
+    #win32api.MessageBox(0, 'You have just run a python script on the button press!', 'Running a Python Script via Javascript', 0x00001000)
     return render_template('index.html')
 
 
+@app.route('/generate', methods=['POST'])
+def generate():
+    '''
+    Given a prompt return the image url of a generated image
+    '''
+    data = request.get_json()
+    prompt = data['prompt']
+    url = "https://api.newnative.ai/stable-diffusion?prompt={}".format(prompt)
 
+    response = requests.request("GET", url)
+    data = response.json()
+    image_url = data["image_url"]
 
+    results = {'image_url': image_url}
+    return jsonify(results)
 
 
 @app.route('/render_animation', methods=['POST'])
