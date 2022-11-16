@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <link rel="stylesheet" href="styles.css">
+        <script src="index.js"></script>
+        <script src="ffmpeg-worker-mp4.js"></script>
+
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/ce44f4be69.js" crossorigin="anonymous"></script>
+    </head>
+
+
+    <body>
+        <video id="awesome" style="margin:0px;right:0px;top:0px;height:512px;width:512px;position:absolute;z-index: -1;" controls autoplay loop></video>
+        <div><a id="vid-download"  style="display:none;right:0px;top:600px;position:absolute;z-index: 100001;" download="clock.webm">Download WebM</a></div>
+
+        <text id="title"> Stable Diffusion Storyline Animator </text>
+
+        <button  style="margin:0px;top:0px;height:48px;left:50px;width:150px;font-size:24px;position:absolute;z-index: 100000;" onclick="interpolate()" type="button">Interpolate</button>
+        <button  style="margin:0px;top:0px;height:48px;left:200px;width:300px;font-size:24px;position:absolute;z-index: 100000;" onclick="create_video()" type="button">Create Video</button>
+
+
+        <i onclick="show_options()" style="left:0;font-size:48px;position:absolute;z-index: 100000;" class="fa-solid fa-circle-info"></i>
+
+
+        <div id="options-container">
+            <div id="form-container">
+                <form id="advanced-settings">
+                    <label for="imageGenModel">Choose a model to generate images:</label>
+                    <select name="imageGenModel" id="imageGenModel">
+                    <option value="LabLabAI">LabLabAI API</option>
+                    <option value="StableDiffusion" selected>Stable Diffusion v1-4</option>
+                    <option value="Runway">RunwayML v1-5</option>
+                    </select>
+    
+                    <label for="videoGenModel">Choose a model to generate video:</label>
+                    <select name="videoGenModel" id="videoGenModel">
+                    <option value="Stable Diffusion v1-4" selected>Stable Diffusion v1-4</option>
+                    <option value="Runway">RunwayML v1-5</option>
+                    </select>
+
+                    <label for="mode">Mode: </label>
+                    <select name="mode" id="mode">
+                    <option value="2D" selected>2D</option>
+                    <option value="3D">3D</option>
+                    </select>
+
+                    <label for="seed">Seed: </label>
+                    <input id="seed" type="number" name="seed" value="21"/>
+
+                    <label for="steps">Steps per image: </label>
+                    <input id="steps" type="number" name="steps" value="21"/>
+
+
+                    <label for="sampler">Sampler: </label>
+                    <select name="sampler" id="sampler">
+                    <option value="dpm2_ancestral" selected>2D</option>
+                    <option value="3D">3D</option>
+                    </select>
+
+                    <div class="slidecontainer">
+                        <label id="scale-val" for="scale">Scale: <span id="demo"></span></label>
+                        <input type="range" min="0" max="20" value="7" class="slider" id="scale" name="scale">
+                        
+                    </div>
+
+                    <button onclick="hide_options()" type="button">Close</button>
+                    <button onclick="submit_settings()" type="button">Submit</button>
+                    <button onclick="basic_options()" id="advanced_button" type="button">Basic options</button>
+                </form>
+                <form id="basic-settings">
+                    <label for="numFrames">Number of frames:</label>
+                    <input id="numFrames" type="number" name="frameNum" value="100"/>
+
+                    <label for="fps">Frames per second:</label>
+                    <input id="fps" type="number" name="fps" value="12"/>
+                
+                    <label for="width">Image width:</label>
+                    <input id="width" type="number" name="width" value="512"/>
+                
+                    <label for="height">Image height:</label>
+                    <input id="height" type="number" name="height" value="512"/>
+
+
+ 
+    
+                    <button onclick="hide_options()" type="button">Close</button>
+                    <button onclick="submit_settings()" type="button">Submit</button>
+                    
+                    <button onclick="advanced_options()" id="advanced_button" type="button">Advanced options</button>
+                </form>
+                
+            </div>
+        </div>
+
+
+
+        <div id="prompt-input-container">
+            <form id="new-keyframe">
+                <label for="frame">Frame:</label>
+                <input id="frame" type="number" name="frame" value="0"/>
+
+                <label for="artists">Choose an artist:</label>
+                <select name="artists" id="artists" multiple>
+                <option value="Hayao Miyazaki" selected>Hayao Miyazaki</option>
+                <option value="Dave Gibbons">Dave Gibbons</option>
+                <option value="Ilya Kuvshinov">Ilya Kuvshinov</option>
+                </select>
+            
+                <label for="illustationStyle">Choose an illustration style:</label>
+                <select name="illustationStyle" id="illustationStyle">
+                <option value="Watercolor">Watercolor</option>
+                <option value="Crayon">Crayon</option>
+                <option value="Acrylic on Canvas">Acrylic on Canvas</option>
+                </select>
+
+                <label for="prompt">Enter prompt:</label>
+                <textarea id="prompt"></textarea>
+                
+                <button onclick="submit_prompt()" type="button" >Submit</button>
+            </form>
+        </div>
+
+        <div id="svg-container">
+            <svg id="svg-content"></svg>
+
+        
+        </div>
+
+
+    </body>
+</html>
