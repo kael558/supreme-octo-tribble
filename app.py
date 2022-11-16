@@ -1,27 +1,17 @@
 import os
-#from animation import DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
+#from animation import DeforumArgs, DeforumAnimArgs, DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
 
 #import torch
 #import cv2
-import numpy as np
-import pandas as pd
+#import numpy as np
+#import pandas as pd
 
 import requests
 import urllib.request
+from types import SimpleNamespace
 
-models_path = "/content/models"  # @param {type:"string"}
-output_path = "/content/output"  # @param {type:"string"}
-
-#os.makedirs(models_path, exist_ok=True)
-#os.makedirs(output_path, exist_ok=True)
-
-model_config = "v1-inference.yaml"
-model_checkpoint =  "sd-v1-4.ckpt"
-
-ckpt_config_path = "./stable-diffusion/configs/stable-diffusion/v1-inference.yaml"
-ckpt_path = os.path.join(models_path, model_checkpoint)
-
-half_precision = True
+import time
+import random
 
 #import win32api
 from flask import Flask, render_template, url_for, request, jsonify
@@ -55,14 +45,14 @@ def generate():
     url = "https://api.newnative.ai/stable-diffusion?prompt={}".format(prompt)
 
 
-    r = requests.post(url='https://0677cdc26e4f3cef.gradio.app/run/predict/', json={"data": ['A happy little girl in a cardboard box decorated as a spaceship, art by Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation']})
+    '''r = requests.post(url='https://0677cdc26e4f3cef.gradio.app/run/predict/', json={"data": ['A happy little girl in a cardboard box decorated as a spaceship, art by Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation']})
     result = r.json()
     json.dump(result, f)
 
     print(result['data'])
 
     im = Image.open(BytesIO(base64.b64decode(result['data'][0])))
-    im.save('test.png')
+    im.save('test.png')'''
 
     response = requests.request("GET", url)
     data = response.json()
@@ -72,7 +62,7 @@ def generate():
     return jsonify(results)
 
 
-@app.route('/render_animation', methods=['POST'])
+'''@app.route('/render_animation', methods=['POST'])
 def render_animation():
     data = request.get_json()
 
@@ -100,14 +90,12 @@ def render_animation(data):
     turbo_prev_image, turbo_prev_frame_idx = None, 0
     turbo_next_image, turbo_next_frame_idx = None, 0
 
-    args.n_samples = 1
     frame_idx = 0
     while frame_idx < args.max_frames:
         print(f"Rendering animation frame {frame_idx} of {args.max_frames}")
         noise = keys.noise_schedule_series[frame_idx]
         strength = keys.strength_schedule_series[frame_idx]
         contrast = keys.contrast_schedule_series[frame_idx]
-        depth = None
 
         # emit in-between frames
         if turbo_steps > 1:
@@ -154,10 +142,7 @@ def render_animation(data):
             noised_sample = add_noise(sample_from_cv2(contrast_sample), noise)
 
             # use transformed previous frame as init for current
-            if half_precision:
-                args.init_sample = noised_sample.half().to(device)
-            else:
-                args.init_sample = noised_sample.to(device)
+            args.init_sample = noised_sample.half().to(device)
             args.strength = max(0.0, min(1.0, strength))
 
         # grab prompt for current frame
@@ -185,9 +170,9 @@ def render_animation(data):
         display.clear_output(wait=True)
         display.display(image)
 
-        args.seed = next_seed(args)
+        args.seed = next_seed(args)'''
 
-    
+
 
 if __name__ == "__main__":
     '''
@@ -240,7 +225,6 @@ if __name__ == "__main__":
     data = {'args': args, 'anim_args': anim_args}
 
     render_animation(data)'''
-
 
     app.run(debug=True)
 

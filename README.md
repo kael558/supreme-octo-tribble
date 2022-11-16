@@ -1,12 +1,20 @@
 ## Todo
  - Hook up API - Done
- - Setup video render from python 
- - TODO add Progress bars for generating images and frames
+ - Advanced options (model selection)
+ - Setup video render probably need to call api endpoint lol
+ - Add Progress bars for generating images and frames
  - Optimized rendering (rendering frames that are changed only)
  - Add audio queue
- - Advanced options (model selection)
  - Input amateur drawing and generate image
 
+## Plan
+- generate needs to return c as a json tensor
+- we will save that tensor'
+
+- requires prompt in the 0th frame and the 100th frame
+- when we call render video
+- it will pass in pairs of prompts with their respective tensors
+- we will return all of the images generated from that (no need to return tensors)
 
 
 ## Prompt Engineering

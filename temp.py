@@ -1409,3 +1409,7 @@ def render_animation(args, anim_args):
         display.display(image)
 
         args.seed = next_seed(args)
+
+
+
+
