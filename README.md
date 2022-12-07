@@ -88,34 +88,24 @@ You may host the API yourself with the [notebook]() provided. All it requires a 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- CONTRIBUTING -->
 ## Contributing
 This repository is intended as an archive. No changes will made to it in the future. 
 
 You may fork the project and work in your own repository.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/gunaratne_rahel) - rahel.gunaratne@gmail.com
-
-Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.com/kael558/supreme-octo-tribble)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+Rahel Gunaratne:
+ - Email: rahel.gunaratne@gmail.com
+ - [Twitter](https://twitter.com/gunaratne_rahel)
+ - [LinkedIn](https://www.linkedin.com/in/rahelgunaratne/)
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
