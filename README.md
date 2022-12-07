@@ -102,8 +102,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 ## Contact
-
-Your Name - [@gunaratne_rahel](https://twitter.com/gunaratne_rahel) - rahel.gunaratne@gmail.com
+Rahel Gunaratne:
+ - Email: rahel.gunaratne@gmail.com
+ - [Twitter](https://twitter.com/gunaratne_rahel)
+ - [LinkedIn](https://www.linkedin.com/in/rahelgunaratne/)
 
 Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.com/kael558/supreme-octo-tribble)
 
