@@ -1,4 +1,4 @@
-'''import re
+import re
 import cv2
 import pandas as pd
 import numpy as np
@@ -397,5 +397,3 @@ def DeforumAnimArgs():
     resume_timestring = "20220829210106" #@param {type:"string"}
 
     return locals() 
-
-'''

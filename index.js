@@ -4,28 +4,60 @@ let centered_image_keyframe = -1;
 let small_image_x = -1, small_image_y = -1;
 
 let is_rendering = false;
-let data = []
+//let data = []
 
-/*let data = [
+let data = [
     {
-        'keyframe': 24, 
+        'keyframe': 0, 
         'prompt': 'A joyful little girl in a cosmonaut helmet and an orange cat standing in a bedroom, art by Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation' ,
-        'images': ['https://slm-assets.secondlife.com/assets/3789218/lightbox/512x512%20PNG%20Landscape%20Texture%20-%20Blue%20Sky.jpg?1308962474', 'https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg'],
+        'images': ['https://i.redd.it/am7b4dmreoq11.png', 'https://thumbs.dreamstime.com/b/beautiful-rain-forest-ang-ka-nature-trail-doi-inthanon-national-park-thailand-36703721.jpg'],
         'tensors': [],
         'shapes': [],
         'selected_image_idx': 0
     }, 
     {
-        'keyframe': 64,
+        'keyframe': 12,
         'prompt': 'A small playful orange cat behind blue snow boots, Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation',
         'images': ['https://i.redd.it/jspiicolbedz.png', 'https://media.istockphoto.com/id/1212275972/photo/parliament-hill-in-ottawa-ontario-canada.jpg?s=612x612&w=0&k=20&c=KN2Nc0OXQeT3pk5lqCh_qD_X-kzpAvxioB53PIpd3JY='],
         'tensors': [],
         'shapes': [],
         'selected_image_idx': 0
+    },
+    {
+        'keyframe': 15,
+        'prompt': 'A small playful orange cat behind blue snow boots, Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation',
+        'images': ['https://i.imgur.com/ZTUsHOk.png', 'https://media.istockphoto.com/id/1212275972/photo/parliament-hill-in-ottawa-ontario-canada.jpg?s=612x612&w=0&k=20&c=KN2Nc0OXQeT3pk5lqCh_qD_X-kzpAvxioB53PIpd3JY='],
+        'tensors': [],
+        'shapes': [],
+        'selected_image_idx': 0
+    },
+    {
+        'keyframe': 20,
+        'prompt': 'A small playful orange cat behind blue snow boots, Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation',
+        'images': ['https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F0cee96d2-af2c-4497-9937-e8151ba343b7_512x512.png', 'https://media.istockphoto.com/id/1212275972/photo/parliament-hill-in-ottawa-ontario-canada.jpg?s=612x612&w=0&k=20&c=KN2Nc0OXQeT3pk5lqCh_qD_X-kzpAvxioB53PIpd3JY='],
+        'tensors': [],
+        'shapes': [],
+        'selected_image_idx': 0
+    },
+    {
+        'keyframe': 25,
+        'prompt': 'A small playful orange cat behind blue snow boots, Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation',
+        'images': ['https://artfilters-ai.com/img/logo.png', 'https://media.istockphoto.com/id/1212275972/photo/parliament-hill-in-ottawa-ontario-canada.jpg?s=612x612&w=0&k=20&c=KN2Nc0OXQeT3pk5lqCh_qD_X-kzpAvxioB53PIpd3JY='],
+        'tensors': [],
+        'shapes': [],
+        'selected_image_idx': 0
+    },
+    {
+        'keyframe': 40,
+        'prompt': 'A small playful orange cat behind blue snow boots, Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation',
+        'images': ['http://d5wt70d4gnm1t.cloudfront.net/media/a-s/articles/2055-716352946698/landscape-painting-list-512x512-c.jpg', 'https://media.istockphoto.com/id/1212275972/photo/parliament-hill-in-ottawa-ontario-canada.jpg?s=612x612&w=0&k=20&c=KN2Nc0OXQeT3pk5lqCh_qD_X-kzpAvxioB53PIpd3JY='],
+        'tensors': [],
+        'shapes': [],
+        'selected_image_idx': 0
     }
-]*/
+]
 
-let api_url = 'https://4b2dcb3bcaccf9fb.gradio.app'
+let api_url = 'https://94281eab7ad9ab78.gradio.app'
 
 let image_gen_url = api_url + '/run/predict'
 let interpolate_gen_url =  api_url + '/run/predict_1'
@@ -64,7 +96,7 @@ function submit_settings(){
 
     num_frames = Number(document.getElementById("numFrames").value);
     frames = [...Array(num_frames+1).keys()]
-    console.log(frames);
+
 
     img_width = Number(document.getElementById("width").value)
     img_height = Number(document.getElementById("height").value)
@@ -173,9 +205,8 @@ function convertDataURIToBinary(dataURI) {
 function done(output) {
 	const url = webkitURL.createObjectURL(output);
     
-	$('awesome').src = url; //toString converts it to a URL via Object URLs, falling back to DataURL
-    document.getElementById('vid-download').style.display = '';
-    document.getElementById('vid-download').href = url
+	document.getElementById('awesome').src = url; //toString converts it to a URL via Object URLs, falling back to DataURL
+    document.getElementById('awesome').style.display = '';
 
 }
 
@@ -230,7 +261,17 @@ function create_video(){
 		type: 'run',
 		TOTAL_MEMORY: 268435456,
 		//arguments: 'ffmpeg -framerate 24 -i img%03d.jpeg output.mp4'.split(' '),
-        arguments: ["-probesize", "100M", "-analyzeduration", "100M","-r", String(fps), "-i", "img%04d.jpeg", "-c:v", "libx264", "-crf", "1", "-vf", "scale=512:512", "-pix_fmt", "yuv420p", "-vb", "20M",'-frames:v', frames.length, "out.mp4"],
+
+        arguments: ["-probesize", "100M", 
+        "-analyzeduration", "100M",
+        "-r", String(fps), 
+        "-i", "img%04d.jpeg", 
+        "-c:v", "libx264", 
+        "-crf", "1", 
+        "-vf", "scale=512:512", 
+        "-pix_fmt", "yuv420p", 
+        "-vb", "20M", 
+        "out.mp4"],
 		/*arguments: [
             '-r', String(fps),
             "-i", "img%04d.png", 
@@ -259,8 +300,7 @@ function create_video(){
 }
 
 function interpolate(){
-    console.log("render interpolation");
-   
+
     data.sort(function(a, b){return a.keyframe-b.keyframe});
     is_rendering = true;
     
@@ -297,7 +337,7 @@ function interpolate(){
             success: function(result) {
                 let k = 0;
                 data_str = JSON.parse(result['data'])
-                console.log(data_str)
+       
                 f=data_str.split(', b\'')
                 for (let i in f){
                     f[i] = f[i].substring(0, f[i].length-1);
@@ -362,11 +402,11 @@ function request_url(keyframe, prompt){
         contentType: "application/json",
         dataType: 'json',
         success: function(result) {
-            //console.log(typeof(result))
+  
             tensor = result['data'][0]['tensor_data']['tensor']
             t_size = result['data'][0]['tensor_data']['size']
             encoding = 'data:image/jpeg;base64,' + result['data'][1]
-            console.log(encoding);
+ 
             for (let entry of data){
                 if (entry.keyframe == keyframe){
                     entry.images[entry.images.length-1]=encoding
@@ -492,7 +532,6 @@ function inital_render(){
 
 function render(){
 
-    console.log(data);
     // Setting image
     let image_scale = 6;
     let image_y_offset = 100;
@@ -518,8 +557,8 @@ function render(){
     }
 
 
-    let bandWidth = (width - 2*timeline_padding)/(num_frames+1)
-
+    let bandWidth = (width - 2*timeline_padding)/(num_frames)
+    console.log(frames);
     svg.selectAll('rect.progress')
         .data(frames, (d, i) => i)
         .join('rect')
@@ -528,6 +567,7 @@ function render(){
         .attr('width', bandWidth)
         .attr('height', 30)
         .style('fill', (d, i) => {
+
             if (i == d){
                 return 'gray';
             }
@@ -537,7 +577,11 @@ function render(){
             return 'green';
         })
         .attr('class', 'progress')
-        .attr('opacity', 0.4)
+        .attr('opacity', (d, i) =>{
+            if (i==frames.length-1)
+                return 0;
+            return 0.5;
+        })
 
     svg.selectAll('g.key-frame')
         .data(data, (d)=>d.keyframe)
@@ -696,7 +740,11 @@ function render(){
                 return keyframe_elem;
             },
         update => {
+
+
+
             update.select('image').attr('xlink:href', (d) => {
+                
                 let start = 0;
                 let end = num_frames;
                 for (let entry of data){
@@ -708,6 +756,7 @@ function render(){
                         end = entry.keyframe-1;
                     }
                 }
+                console.log('update image ' + start + ', ' + end)
 
                 for (;start < end; start++){
                     frames[start] = -1;

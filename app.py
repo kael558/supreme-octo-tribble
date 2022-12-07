@@ -1,233 +1,116 @@
+import base64
+from io import BytesIO
+
 import os
-#from animation import DeforumArgs, DeforumAnimArgs, DeformAnimKeys, anim_frame_warp_2d, sample_from_cv2, sample_to_cv2, maintain_colors, add_noise, next_seed
+from PIL import Image
+import numpy as np
+from pathlib import Path
+import gradio as gr
 
-#import torch
-#import cv2
-#import numpy as np
-#import pandas as pd
+import warnings
 
-import requests
-import urllib.request
-from types import SimpleNamespace
-
-import time
-import random
-
-#import win32api
-from flask import Flask, render_template, url_for, request, jsonify
-
-app = Flask(__name__)
+warnings.filterwarnings("ignore")
 
 
+def clone_args():
+  args = SimpleNamespace(**args_dict)
+  args.steps = 20
+  args.timestring = time.strftime('%Y%m%d%H%M%S')
+  args.strength = max(0.0, min(1.0, args.strength))
+  args.diffusion_cadence = 6
 
-#Using the below, the popup message appears on the page load of index.html
-#0x00001000 - This makes the popup appear over the browser window
-@app.route('/')
-def index():
-    #win32api.MessageBox(0, 'You have just run a python script on the page load!', 'Running a Python Script via Javascript', 0x00001000)
-    return render_template('index.html')
+  if args.seed == -1:
+      args.seed = random.randint(0, 2**32 - 1)
+  if not args.use_init:
+      args.init_image = None
+  if args.sampler != 'ddim':
+      args.ddim_eta = 0
 
-#Using the below, the popup message appears when the button is clicked on the webpage.
-#0x00001000 - This makes the popup appear over the browser window
-@app.route('/test')
-def test():
-    #win32api.MessageBox(0, 'You have just run a python script on the button press!', 'Running a Python Script via Javascript', 0x00001000)
-    return render_template('index.html')
-
-
-@app.route('/generate', methods=['POST'])
-def generate():
-    '''
-    Given a prompt return the image url of a generated image
-    '''
-    data = request.get_json()
-    prompt = data['prompt']
-    url = "https://api.newnative.ai/stable-diffusion?prompt={}".format(prompt)
+  return args
 
 
-    '''r = requests.post(url='https://0677cdc26e4f3cef.gradio.app/run/predict/', json={"data": ['A happy little girl in a cardboard box decorated as a spaceship, art by Hayao Miyazaki, Memphis, Watercolor, Storybook, highly detailed, illustration, trending on artstation']})
-    result = r.json()
-    json.dump(result, f)
+def generate_drawing(text):
+    args = clone_args()
+    args.seed = random.randint(0, 2**32 - 1)
+    args.prompt = text
+    results = generate(args, return_c=True)
+    c, image = results[0], results[1]
+    size = c.size()
 
-    print(result['data'])
+    flatten = torch.flatten(c)
 
-    im = Image.open(BytesIO(base64.b64decode(result['data'][0])))
-    im.save('test.png')'''
+    arr = flatten.cpu().detach().numpy().tolist()
 
-    response = requests.request("GET", url)
-    data = response.json()
-    image_url = data["image_url"]
+    json_tensor = json.dumps(arr)
+    json_size = json.dumps(size)
 
-    results = {'image_url': image_url}
-    return jsonify(results)
+    tensor = {'tensor_data': {'tensor': json_tensor, 'size': json_size}}
+    display.clear_output(wait=True)
+    #print(image)
+
+    buffered = BytesIO()
+    image.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue())
+
+    return (tensor, img_str)
 
 
-'''@app.route('/render_animation', methods=['POST'])
-def render_animation():
-    data = request.get_json()
+def generate_interpolated_images(obj1, obj2):
+    args = clone_args()
+    args.seed_behavior = 'fixed'
+
+    dist_frames = obj2['keyframe'] - obj1['keyframe']
+
+    arr1 = np.array(json.loads(obj1['tensor']))
+    size1 = json.loads(obj1['size'])
+
+    reshaped_arr1 = arr1.reshape(size1)
+    prompt1_c = (torch.from_numpy(reshaped_arr1)).float().cuda()
+
+    arr2 = np.array(json.loads(obj2['tensor']))
+    size2 = json.loads(obj2['size'])
+    prompt2_c = (torch.from_numpy(arr2.reshape(size2))).float().cuda()
 
 
-def render_animation(data):
-    args = data.args
-    anim_args = data.anim_args
-
-    # expand key frame strings to values
-    keys = DeformAnimKeys(anim_args)
-
-    # expand prompts out to per-frame TODO correct
-    animation_prompts = {}
-    for prompt in args.prompts:
-        animation_prompts[prompt.keyframe] = prompt.image;
-    
-    # expand prompts out to per-frame
-    prompt_series = pd.Series([np.nan for a in range(anim_args.max_frames)])
-    for i, prompt in animation_prompts.items():
-        prompt_series[int(i)] = prompt
-    prompt_series = prompt_series.ffill().bfill()
-
-    # state for interpolating between diffusion steps
-    turbo_steps = args.diffusion_cadence
-    turbo_prev_image, turbo_prev_frame_idx = None, 0
-    turbo_next_image, turbo_next_frame_idx = None, 0
-
-    frame_idx = 0
-    while frame_idx < args.max_frames:
-        print(f"Rendering animation frame {frame_idx} of {args.max_frames}")
-        noise = keys.noise_schedule_series[frame_idx]
-        strength = keys.strength_schedule_series[frame_idx]
-        contrast = keys.contrast_schedule_series[frame_idx]
-
-        # emit in-between frames
-        if turbo_steps > 1:
-            tween_frame_start_idx = max(0, frame_idx-turbo_steps)
-            for tween_frame_idx in range(tween_frame_start_idx, frame_idx):
-                tween = float(tween_frame_idx - tween_frame_start_idx + 1) / float(frame_idx - tween_frame_start_idx)
-                print(f"  creating in between frame {tween_frame_idx} tween:{tween:0.2f}")
-
-                advance_prev = turbo_prev_image is not None and tween_frame_idx > turbo_prev_frame_idx
-                advance_next = tween_frame_idx > turbo_next_frame_idx
-
-                if advance_prev:
-                    turbo_prev_image = anim_frame_warp_2d(turbo_prev_image, args, anim_args, keys, tween_frame_idx)
-                if advance_next:
-                    turbo_next_image = anim_frame_warp_2d(turbo_next_image, args, anim_args, keys, tween_frame_idx)
-              
-                turbo_prev_frame_idx = turbo_next_frame_idx = tween_frame_idx
-
-                if turbo_prev_image is not None and tween < 1.0:
-                    img = turbo_prev_image*(1.0-tween) + turbo_next_image*tween
-                else:
-                    img = turbo_next_image
-
-                filename = f"{args.timestring}_{tween_frame_idx:05}.png"
-                cv2.imwrite(os.path.join(args.outdir, filename), cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_RGB2BGR))
-            if turbo_next_image is not None:
-                prev_sample = sample_from_cv2(turbo_next_image)
-
-        # apply transforms to previous frame
-        if prev_sample is not None:
-
-            prev_img = anim_frame_warp_2d(sample_to_cv2(prev_sample), args, anim_args, keys, frame_idx)
-
-            # apply color matching
-            if anim_args.color_coherence != 'None':
-                if color_match_sample is None:
-                    color_match_sample = prev_img.copy()
-                else:
-                    prev_img = maintain_colors(prev_img, color_match_sample, anim_args.color_coherence)
-
-            # apply scaling
-            contrast_sample = prev_img * contrast
-            # apply frame noising
-            noised_sample = add_noise(sample_from_cv2(contrast_sample), noise)
-
-            # use transformed previous frame as init for current
-            args.init_sample = noised_sample.half().to(device)
-            args.strength = max(0.0, min(1.0, strength))
-
-        # grab prompt for current frame
-        args.prompt = prompt_series[frame_idx]
-        print(f"{args.prompt} {args.seed}")
-
-        print(f"Angle: {keys.angle_series[frame_idx]} Zoom: {keys.zoom_series[frame_idx]}")
-        print(f"Tx: {keys.translation_x_series[frame_idx]} Ty: {keys.translation_y_series[frame_idx]} Tz: {keys.translation_z_series[frame_idx]}")
-        print(f"Rx: {keys.rotation_3d_x_series[frame_idx]} Ry: {keys.rotation_3d_y_series[frame_idx]} Rz: {keys.rotation_3d_z_series[frame_idx]}")
-
+    images = []
+    for j in range(1, dist_frames):
+        
+        # interpolate the text embedding
+        args.init_c = prompt1_c.add(prompt2_c.sub(prompt1_c).mul(j * 1/dist_frames))
 
         # sample the diffusion model
-        sample, image = generate(args, frame_idx, return_latent=False, return_sample=True)
-        prev_sample = sample
+        results = generate(args)
 
-        if turbo_steps > 1:
-            turbo_prev_image, turbo_prev_frame_idx = turbo_next_image, turbo_next_frame_idx
-            turbo_next_image, turbo_next_frame_idx = sample_to_cv2(sample, type=np.float32), frame_idx
-            frame_idx += turbo_steps
-        else:    
-            filename = f"{args.timestring}_{frame_idx:05}.png"
-            image.save(os.path.join(args.outdir, filename))
-            frame_idx += 1
+        image = results[0]
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue())
 
-        display.clear_output(wait=True)
+        images.append(img_str)
+
+        print(j)
         display.display(image)
+        #print(img_str)
 
-        args.seed = next_seed(args)'''
-
-
-
-if __name__ == "__main__":
-    '''
-    args:
-    prompts
-    diffusion_cadence = 7
-    timestring = (calculated later)
-    outdir = 
-    seed = 25
-    W = (INPUT)
-    H = (INPUT)
-    seed_behavior = "fixed"
-
-    anim_args:
-    max_frames = (INPUT)
-    color_coherence = 'Match Frame 0 LAB'
-    border = 'replicate'
-
-    noise_schedule = "0: (0.02)"
-    strength_schedule = "0: (0.65)"
-    contrast_schedule = "0: (1.0)"
-
-    angle = "0:(0)"
-    zoom = "0:(1.04)"
-    translation_x = "0:(10*sin(2*3.14*t/10))"
-    translation_y = "0:(0)"
-    translation_z = "0:(0)"
-    rotation_3d_x = "0:(0)"
-    rotation_3d_y = "0:(0)"
-    rotation_3d_z = "0:(0)"
-    '''
-
-    '''args_dict = DeforumArgs()
-    anim_args_dict = DeforumAnimArgs()
-
-    args = SimpleNamespace(**args_dict)
-    anim_args = SimpleNamespace(**anim_args_dict)
-
-    args.timestring = time.strftime('%Y%m%d%H%M%S')
-    args.strength = max(0.0, min(1.0, args.strength))
-    
-    if args.seed == -1:
-        args.seed = random.randint(0, 2**32 - 1)
-
-    if args.sampler != 'ddim':
-        args.ddim_eta = 0
-
-    torch.cuda.empty_cache()
-
-    data = {'args': args, 'anim_args': anim_args}
-
-    render_animation(data)'''
-
-    app.run(debug=True)
+        args.seed = next_seed(args)
+    return str(images)
 
 
+img_demo = gr.Interface(
+    description="Stable Diffusion - Storybook MVP",
+    fn=generate_drawing,
+    inputs=["text"],
+    outputs=["json", "json"],
+)
+
+int_demo = gr.Interface(
+    description="Stable Diffusion - Interpolation Gen",
+    fn=generate_interpolated_images,
+    inputs=["json", "json"],
+    outputs=["json"],
+)
 
 
+demo = gr.TabbedInterface([img_demo, int_demo], ["Image Gen", "Interpolation Gen"])
+
+demo.launch(share=True)
