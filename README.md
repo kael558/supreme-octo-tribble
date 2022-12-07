@@ -109,7 +109,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/gunaratne_rahel) - rahel.gunaratne@gmail.com
+Your Name - [@gunaratne_rahel](https://twitter.com/gunaratne_rahel) - rahel.gunaratne@gmail.com
 
 Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.com/kael558/supreme-octo-tribble)
 
