@@ -90,7 +90,7 @@ You may host the API yourself with the [notebook](https://github.com/kael558/sup
 
 <!-- CONTRIBUTING -->
 ## Contributing
-This repository is intended as an archive. No changes will made to it in the future. 
+This repository is intended as an archive. No changes will be made to it in the future. 
 
 You may fork the project and work in your own repository.
 
