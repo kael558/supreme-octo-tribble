@@ -30,7 +30,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-This project was created for [LabLab.ai's Stable Diffusion Hackathon](https://lablab.ai/event/stable-diffusion-hackathon). We won first place.
+[Farid][farid-linkedin-url] and [I][rahel-linkedin-url] created this project for [LabLab.ai's Stable Diffusion Hackathon](https://lablab.ai/event/stable-diffusion-hackathon). We won first place.
 
 This project allows users to:
 * Generate images based on styles
@@ -121,9 +121,9 @@ Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.c
 
 * [EnzymeZoo](https://twitter.com/enzymezoo) for created the Deforum notebook used as a starting point for this project
 * [Jeremy Howard](https://twitter.com/jeremyphoward) and [John Whitaker](https://twitter.com/johnowhitaker) for providing a [valuable course in Stable Diffusion](https://forums.fast.ai/t/lesson-9-part-2-preview/101336)
+* [othneildrew](https://github.com/othneildrew/Best-README-Template) for providing this README template
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
