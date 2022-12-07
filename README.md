@@ -61,7 +61,7 @@ We previously used Flask to circumvent the CORS error from LabLab's Stable Diffu
 
 Now you can simply open the `index.html` file to run the project. Note, since our Stable Diffusion API is not running, the project will not work. We are currently working on a solution for this. 
 
-You may host the API yourself with the [notebook]() provided. All it requires a HuggingFace Spaces token. 
+You may host the API yourself with the [notebook](https://github.com/kael558/supreme-octo-tribble/blob/main/notebooks/Deforum_Stable_Diffusion_Adapted_To_API_v2.ipynb) provided. All it requires a HuggingFace Spaces token. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -138,7 +138,7 @@ Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.c
 [issues-url]: https://github.com/github_username/repo_name/issues
 
 [license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[license-url]: https://github.com/kael558/supreme-octo-tribble/blob/main/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [rahel-linkedin-url]: https://www.linkedin.com/in/rahelgunaratne/
