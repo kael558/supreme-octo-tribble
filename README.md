@@ -2,7 +2,6 @@
 
 [![MIT License][license-shield]][license-url]
 
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -137,9 +136,8 @@ Project Link: [https://github.com/kael558/supreme-octo-tribble](https://github.c
 [issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
 [issues-url]: https://github.com/github_username/repo_name/issues
 
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/kael558/supreme-octo-tribble.svg?style=for-the-badge
 [license-url]: https://github.com/kael558/supreme-octo-tribble/blob/main/LICENSE.txt
-
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [rahel-linkedin-url]: https://www.linkedin.com/in/rahelgunaratne/
 [farid-linkedin-url]: https://www.linkedin.com/in/farid-hassainia-ca/
