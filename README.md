@@ -2,7 +2,6 @@
 
 [![MIT License][license-shield]][license-url]
 
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -13,13 +12,7 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -31,7 +24,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-This project was created for [LabLab.ai's Stable Diffusion Hackathon](https://lablab.ai/event/stable-diffusion-hackathon). We won first place.
+[Farid][farid-linkedin-url] and [I][rahel-linkedin-url] created this project for [LabLab.ai's Stable Diffusion Hackathon](https://lablab.ai/event/stable-diffusion-hackathon). We won first place.
 
 This project allows users to:
 * Generate images based on styles
@@ -61,7 +54,7 @@ We previously used Flask to circumvent the CORS error from LabLab's Stable Diffu
 
 Now you can simply open the `index.html` file to run the project. Note, since our Stable Diffusion API is not running, the project will not work. We are currently working on a solution for this. 
 
-You may host the API yourself with the [notebook]() provided. All it requires a HuggingFace Spaces token. 
+You may host the API yourself with the [notebook](https://github.com/kael558/supreme-octo-tribble/blob/main/notebooks/Deforum_Stable_Diffusion_Adapted_To_API_v2.ipynb) provided. All it requires a HuggingFace Spaces token. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -90,7 +83,7 @@ You may host the API yourself with the [notebook]() provided. All it requires a 
 
 <!-- CONTRIBUTING -->
 ## Contributing
-This repository is intended as an archive. No changes will made to it in the future. 
+This repository is intended as an archive. No changes will be made to it in the future. 
 
 You may fork the project and work in your own repository.
 
@@ -112,9 +105,9 @@ Rahel Gunaratne:
 
 * [EnzymeZoo](https://twitter.com/enzymezoo) for created the Deforum notebook used as a starting point for this project
 * [Jeremy Howard](https://twitter.com/jeremyphoward) and [John Whitaker](https://twitter.com/johnowhitaker) for providing a [valuable course in Stable Diffusion](https://forums.fast.ai/t/lesson-9-part-2-preview/101336)
+* [othneildrew](https://github.com/othneildrew/Best-README-Template) for providing this README template
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -127,9 +120,8 @@ Rahel Gunaratne:
 [issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
 [issues-url]: https://github.com/github_username/repo_name/issues
 
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-
+[license-shield]: https://img.shields.io/github/license/kael558/supreme-octo-tribble.svg?style=for-the-badge
+[license-url]: https://github.com/kael558/supreme-octo-tribble/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [rahel-linkedin-url]: https://www.linkedin.com/in/rahelgunaratne/
 [farid-linkedin-url]: https://www.linkedin.com/in/farid-hassainia-ca/
